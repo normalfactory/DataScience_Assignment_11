@@ -53,7 +53,7 @@ function updateTable(sourceObservations){
     sourceObservations.forEach(insertTableRow);
 
 
-    console.log("Completed updating table of records.")
+    console.log(`Completed updating table of records. Total Records: ${sourceObservations.length}`)
 }
 
 
