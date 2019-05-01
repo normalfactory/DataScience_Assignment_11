@@ -196,7 +196,8 @@ function handleFilterClick() {
 
 function clearFilterClick() {
     /*
-    Updates to the table to have no filter
+    Updates to the table to have no filters; reloads the table with all of the records, sets the "no filter" option and
+    disables the clear filter button.
 
     Accepts : nothing
 
@@ -214,6 +215,18 @@ function clearFilterClick() {
     updateTable(data);
 
 
+    //- Update Filter Dialog; set all to "no filter"
+    d3.select('#dateFilterSelect').node().value = FILTERNOTUSED;
+
+    d3.select('#cityFilterSelect').node().value = FILTERNOTUSED;
+
+    d3.select('#stateFilterSelect').node().value = FILTERNOTUSED;
+
+    d3.select('#countryFilterSelect').node().value = FILTERNOTUSED;
+
+    d3.select('#shapeFilterSelect').node().value = FILTERNOTUSED;
+
+
     //- Disable Clear Button
     clearFilterButton.attr('disabled', true);
 
@@ -224,7 +237,7 @@ function clearFilterClick() {
 function prepareFilter(sourceData) {
     /* Populates the HTML of the filter with unique values for city, state, country and shape.
 
-    Accepts : sourceData - list of the dictionaries of the sightings
+    Accepts : sourceData (array) list of the dictionaries of the sightings
 
     Returns : undefined
     */
@@ -307,20 +320,3 @@ clearFilterButton.attr('disabled', true);
 
 
 console.log('--> Completed initial loading of page')
-
-
-
-//--------------- TESTING
-
-//- Subset
-// https://codeburst.io/javascript-array-distinct-5edc93501dc4
-
-// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
-
-
-// Create array of values; city for example
-// then use the set function
-
-//d3.event.preventDefault();
-
-
