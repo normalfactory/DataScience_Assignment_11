@@ -7,6 +7,7 @@
 
 console.log('--> Start initial load of page from App.js');
 
+const FILTERNOTUSED = '-1';
 
 
 //-- Functions
@@ -67,31 +68,129 @@ function handleFilterClick() {
     console.log("--> Got click event of adding filter");
 
 
-    //- Get DateTime Filter
-    let dateFilterValue = d3.select('#dateFilterInput').property('value');
+    //- Prevent Page Refresh
+    d3.event.preventDefault();
+
+    
+
+    //-- Get Filters in use
+    //- Date Filter
+    let dateFilterValue = d3.select('#dateFilterSelect').node().value;
+    let useDateFilter = true;
+
+    if (dateFilterValue == FILTERNOTUSED){
+        useDateFilter = false;
+    }
+
+    //- City Filter
+    let cityFilterValue = d3.select('#cityFilterSelect').node().value;
+    let useCityFilter = true;
+
+    if (cityFilterValue == FILTERNOTUSED){
+        useCityFilter = false;
+    }
+
+    //- State Filter
+    let stateFilterValue = d3.select('#stateFilterSelect').node().value;
+    let useStateFilter = true;
+
+    if (stateFilterValue == FILTERNOTUSED){
+        useStateFilter = false;
+    }
+
+    //- Country Filter
+    let countryFilterValue = d3.select('#countryFilterSelect').node().value;
+    let useCountryFilter = true;
+
+    if (countryFilterValue == FILTERNOTUSED){
+        useCountryFilter = false;
+    }
+
+    //- Shape Filter
+    let shapeFilterValue = d3.select('#shapeFilterSelect').node().value;
+    let useShapeFilter = true;
+
+    if (shapeFilterValue == FILTERNOTUSED){
+        useShapeFilter = false;
+    }
 
 
-    //- Get Subset of data
-    let dataSubset = data.filter(item => {
-        if (item.datetime == dateFilterValue)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    });
+    //-- Apply Filter
+    if ((useDateFilter == false) && (useCityFilter == false) && (useStateFilter == false) && (useCountryFilter == false) && (useShapeFilter == false) ) {
+        
+        console.log("No filter has been selected, loading table with all records");
+        
+        //- No Filters in use
+        updateTable(data);
 
 
-    //- Update Table
-    updateTable(dataSubset);
+        //- Update Filter buttons
+        clearFilterButton.attr('disabled', true);
+
+        d3.select('#btnOpenFilter').text("Add Filter")
+    }
+    else
+    {
+        console.log(`Filter has been found, updating table with subset of records. Date: ${useDateFilter} City: ${useCityFilter} State: ${useStateFilter} Country: ${useCountryFilter} Shape: ${useShapeFilter}`);
 
 
-    //- Update Filter buttons
-    clearFilterButton.attr('disabled', null);
+        //- Get Subset of data
+        //  Only has to match on of the filters provided
+        let dataSubset = data.filter(item => {
 
-    d3.select('#btnOpenFilter').text("Update Filter")
+
+            let useItem = false;
+
+
+            //- Date Filter
+            if (useDateFilter == true){
+                if (item.datetime == dateFilterValue) {
+                    useItem = true;
+                }
+            }
+
+            //- City Filter
+            if (useCityFilter == true){
+                if (item.city == cityFilterValue){
+                    useItem = true;
+                }
+            }
+
+            //- State Filter
+            if (useStateFilter == true){
+                if (item.state == stateFilterValue){
+                    useItem = true;
+                }
+            }
+
+            //- Country Filter
+            if (useCountryFilter == true){
+                if (item.country == countryFilterValue){
+                    useItem = true;
+                }
+            }
+
+            //- Shape filter
+            if (useShapeFilter == true){
+                if (item.shape == shapeFilterValue){
+                    useItem = true;
+                }
+            }
+
+
+            return useItem;
+        });
+
+
+        //- Update Table
+        updateTable(dataSubset);
+
+
+        //- Update Filter buttons
+        clearFilterButton.attr('disabled', null);
+
+        d3.select('#btnOpenFilter').text("Update Filter")
+    }
 }
 
 
@@ -107,6 +206,10 @@ function clearFilterClick() {
     console.log("--> Got click event for clearing filter");
 
 
+    //- Prevent Page Refresh
+    d3.event.preventDefault();
+
+
     //- Update table with all records
     updateTable(data);
 
@@ -118,8 +221,72 @@ function clearFilterClick() {
 }
 
 
+function prepareFilter(sourceData) {
+    /* Populates the HTML of the filter with unique values for city, state, country and shape.
+
+    Accepts : sourceData - list of the dictionaries of the sightings
+
+    Returns : undefined
+    */
+
+    //-- Date Filter
+    let allDates = data.map(item => item.datetime);
+
+    updateFilterOptions(allDates, '#dateFilterSelect', 'No date filter');
+
+
+    //- City Filter
+    let allCities = data.map(item => item.city);
+
+    updateFilterOptions(allCities, '#cityFilterSelect', 'No city filter');
+
+
+    //- State Filter
+    let allStates = data.map(item => item.state);
+
+    updateFilterOptions(allStates, '#stateFilterSelect', 'No state filter');
+
+
+    //- Country Filter
+    let allCountries = data.map(item => item.country);
+    
+    updateFilterOptions(allCountries, '#countryFilterSelect', 'No country filter');
+
+
+    //- Shape Filter
+    let allShapes = data.map(item => item.shape);
+
+    updateFilterOptions(allShapes, '#shapeFilterSelect', 'No shape filter');
+}
+
+
+function updateFilterOptions(sourceValues, filterID, noFilterText){
+    /* Updates the HTML with the options from the list of values provided; makes unique before adding to HTML.
+
+    Accepts : sourceValues (array) list of the values to add to filter
+              filterID (text) ID of the options tag in the HTML; example "#dateFilterSelect"
+              noFilterText (text) text used for the no filter option; example "No date filter"
+    */
+
+    //- Get Unique Values
+    let uniqueValues = [...new Set(sourceValues)];
+    uniqueValues.sort();
+
+    //- Set no filter
+    d3.select(filterID).append('option').text(noFilterText).attr('value', FILTERNOTUSED);
+
+    //- Add Unique Values
+    uniqueValues.forEach(item => d3.select(filterID).append('option').text(item).attr('value', item));
+}
+
+
+//-- Prepare Filter Dialog
+prepareFilter(data);
+
+
 //-- Load All data into table
 updateTable(data);
+
 
 
 //- Prepare Click Events
@@ -140,3 +307,20 @@ clearFilterButton.attr('disabled', true);
 
 
 console.log('--> Completed initial loading of page')
+
+
+
+//--------------- TESTING
+
+//- Subset
+// https://codeburst.io/javascript-array-distinct-5edc93501dc4
+
+// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+
+
+// Create array of values; city for example
+// then use the set function
+
+//d3.event.preventDefault();
+
+

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Aliens-R-Real</title>
 
+    <!-- Popper: Required for drop down menu used in filter -->
+
 
     <!-- Bootstrap: Darkly Theme -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css" integrity="sha384-w+8Gqjk9Cuo6XH9HKHG5t5I1VR4YBNdPt/29vwgfZR485eoEJZ8rJRbm3TR32P6k" crossorigin="anonymous">
@@ -56,12 +58,64 @@
 
 
                         <div class='modal-body'>
-                            <p>Hello world!</p>
+                            <p class='text-muted'>Select the items below to filter the UFO sightings by. These filters are joined together with an OR; 
+                                the UFO sighting only has to match one of the filters provided.
+                            </p>
 
                             <form>
-                                <div class='form-group'>
-                                    <label for='dateFilterInput'>Date to filter</label>
-                                    <input class='form-control' id='dateFilterInput' type='text' placeholder='1/11/2010'>
+
+                                <!-- Date Filter -->
+                                <div class='input-group mb-4'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='dateFilterSelect'>Date Filter</label>
+                                    </div>
+                                    <select class='custom-select' id='dateFilterSelect'>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <!-- City Filter -->
+                                <div class='input-group mb-4'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='cityFilterSelect'>City Filter</label>
+                                    </div>
+                                    <select class='custom-select' id='cityFilterSelect'>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <!-- State Filter -->
+                                <div class='input-group mb-4'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='stateFilterSelect'>State Filter</label>
+                                    </div>
+                                    <select class='custom-select' id='stateFilterSelect'>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <!-- Country Filter -->
+                                <div class='input-group mb-4'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='countryFilterSelect'>Country Filter</label>
+                                    </div>
+                                    <select class='custom-select' id='countryFilterSelect'>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <!-- Shape Filter -->
+                                <div class='input-group mb-4'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='shapeFilterSelect'>Shape Filter</label>
+                                    </div>
+                                    <select class='custom-select' id='shapeFilterSelect'>
+                                        
+                                    </select>
                                 </div>
                             </form>
 
